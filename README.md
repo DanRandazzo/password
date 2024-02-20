@@ -1,7 +1,9 @@
+Forked and slightly changed from https://github.com/alfred-workflow-collections/password
+
 # Generate Password
 > Randomly Generate Password
 > 
-> The default length is 16 characters, but the length can be customized.
+> The default length is 14 characters, but the length can be customized.
 
 # How to Use
 
