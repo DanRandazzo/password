@@ -9,8 +9,16 @@ Forked and slightly changed from https://github.com/alfred-workflow-collections/
 
 Download the latest package from the releases, and double-click to install it into Alfred.
 
+Run
+
 ```
 pwd
 ```
 
-![](1.png)
+or f.ex.
+
+```
+pwd 20
+```
+
+![](screenshot.png)
