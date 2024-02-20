@@ -2,26 +2,25 @@ import random
 import json
 import sys
 
-# 定义字符取值范围
-
+# Define the range of characters for password generation
 CHARACTERS = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
     'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D',
     'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
     'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
 ]
-LOWER_CASE_CHARACTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-                         'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-UPPER_CASE_CHARACTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-                         'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+LOWER_CASE_CHARACTERS = [
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+    'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+]
+UPPER_CASE_CHARACTERS = [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+    'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+]
 NUMBERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-SYMBOL = ['!', '#', '$', '%', '&', '(', ')', '*', '+', '~', '@', '^', '_', '{', '}', '[', ']', '|', '<', '>', '?', '/',
-          '-', '=', ';', ':', ',', '.', '`', "'", '"', '\\']  # noqa: E501
+SYMBOLS = ['!', '$', '%', '&', '*', '@']
 
-SYMBOLS = ['!', '#', '$', '%', '&', '*', '@', ]
-
-
-# 定义密码生成函数
+# Define the password generation function
 def generator_password(length):
     lower_case_password = number_password = strong_password = normal_password = simple_password = ''
     for i in range(length):
@@ -32,8 +31,7 @@ def generator_password(length):
         lower_case_password += random.choice(LOWER_CASE_CHARACTERS)
     return lower_case_password, number_password, simple_password, normal_password, strong_password
 
-
-# 定义密码强度评分函数
+# Define the password strength scoring function
 def password_score(password):
     score = 0
 
@@ -44,64 +42,47 @@ def password_score(password):
     has_sz = has_xx = has_dx = has_ts = False
 
     for c in password:
-        if has_sz is False and c in NUMBERS:
+        if not has_sz and c in NUMBERS:
             score += 1
             has_sz = True
-        if has_xx is False and c in LOWER_CASE_CHARACTERS:
+        if not has_xx and c in LOWER_CASE_CHARACTERS:
             score += 1
             has_xx = True
-        if has_dx is False and c in UPPER_CASE_CHARACTERS:
+        if not has_dx and c in UPPER_CASE_CHARACTERS:
             score += 1
             has_dx = True
-        if has_ts is False and c in SYMBOLS:
+        if not has_ts and c in SYMBOLS:
             score += 1
             has_ts = True
 
-    # score += len(set(password)) // 6
-    # print(password, score)
     return score
 
-
-def isSeries(pwd: str, seriesCount: int = 3):
+# Determine if the password contains sequential characters
+def isSeries(pwd, seriesCount=3):
     '''
-    判断密码是否连续
-    pwd: 密码
-    seriesCount: 连续个数
+    Check if the password contains sequential characters.
+    pwd: The password
+    seriesCount: The number of sequential characters to check for
     '''
-    if pwd and (len(pwd) > 0):
-        # 自身算起
-        ascSeriesCount = 1
-        descSeriesCount = 1
-        # 存在顺序型的连续性的字符串
-        for i in range(len(pwd)):
-            currentCharCode = pwd[i]
-            if i == 0:
-                prevCharCode = ""
-            else:
-                prevCharCode = pwd[i - 1]
-                if currentCharCode == chr(ord(prevCharCode) + 1):
-                    ascSeriesCount += 1
-                    if ascSeriesCount == seriesCount:
-                        return True
-                else:
-                    ascSeriesCount = 1
+    ascSeriesCount = descSeriesCount = 1
+    for i in range(1, len(pwd)):
+        if ord(pwd[i]) == ord(pwd[i - 1]) + 1:
+            ascSeriesCount += 1
+            if ascSeriesCount >= seriesCount:
+                return True
+        else:
+            ascSeriesCount = 1
 
-        # 存在逆序性的连续性的字符串*/
-        for i in range(len(pwd)):
-            currentCharCode = pwd[i]
-            if (i - 1) >= 0:
-                prevCharCode = pwd[i - 1]
-            else:
-                prevCharCode = ""
-            if chr(ord(currentCharCode) + 1) == prevCharCode:
-                descSeriesCount += 1
-                if descSeriesCount == seriesCount:
-                    return True
-            else:
-                descSeriesCount = 1
+        if ord(pwd[i]) == ord(pwd[i - 1]) - 1:
+            descSeriesCount += 1
+            if descSeriesCount >= seriesCount:
+                return True
+        else:
+            descSeriesCount = 1
+
     return False
 
-
+# Get icon path based on password score
 def get_icon_by_score(score):
     if score >= 5:
         return {'path': 'mima-4.png'}
@@ -112,53 +93,51 @@ def get_icon_by_score(score):
     else:
         return {'path': 'mima-6.png'}
 
-
+# Main function to generate and evaluate passwords
 def main(length=16):
     lower_case_password, number_password, simple_password, normal_password, strong_password = generator_password(length)
 
     items = [
         {
             "title": strong_password,
-            "subtitle": "字母 + 数字 + 特殊符号",
+            "subtitle": "Alphanumeric + special characters",
             "arg": strong_password,
-            'icon': eval('get_icon_by_score(password_score(strong_password))'),
+            'icon': get_icon_by_score(password_score(strong_password)),
             "valid": "True"
         },
         {
             "title": normal_password,
-            "subtitle": "字母 + 数字",
+            "subtitle": "Alphanumeric",
             "arg": normal_password,
-            'icon': eval('get_icon_by_score(password_score(normal_password))'),
+            'icon': get_icon_by_score(password_score(normal_password)),
             "valid": "True"
         },
         {
             "title": simple_password,
-            "subtitle": "纯字母密码",
+            "subtitle": "Alphabetic only",
             "arg": simple_password,
-            'icon': eval('get_icon_by_score(password_score(simple_password))'),
+            'icon': get_icon_by_score(password_score(simple_password)),
             "valid": "True"
         },
         {
             "title": lower_case_password,
-            "subtitle": "纯小写字母密码",
+            "subtitle": "Lowercase letters only",
             "arg": lower_case_password,
-            'icon': eval('get_icon_by_score(password_score(lower_case_password))'),
+            'icon': get_icon_by_score(password_score(lower_case_password)),
             "valid": "True"
         },
         {
             "title": number_password,
-            "subtitle": "纯数字密码",
+            "subtitle": "Numbers only",
             "arg": number_password,
-            'icon': eval('get_icon_by_score(password_score(number_password))'),
+            'icon': get_icon_by_score(password_score(number_password)),
             "valid": "True"
         },
-
     ]
 
     return json.dumps({'items': items}, ensure_ascii=False)
 
-
 if __name__ == '__main__':
-    query = sys.argv[1] if len(sys.argv) > 1 else 16
+    query = sys.argv[1] if len(sys.argv) > 1 else 14
     res = main(int(query))
     print(res)
