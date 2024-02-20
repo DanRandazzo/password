@@ -10,7 +10,7 @@ Forked and slightly changed from https://github.com/alfred-workflow-collections/
 Download the latest package from the releases, and double-click to install it into Alfred.
 
 ```
-pwd 16
+pwd
 ```
 
 ![](1.png)
