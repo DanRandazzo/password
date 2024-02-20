@@ -1,12 +1,11 @@
-# Generator Password
-> 随机生成密码
+# Generate Password
+> Randomly Generate Password
 > 
-> 默认长度为16位，可自定义长度
+> The default length is 16 characters, but the length can be customized.
 
+# How to Use
 
-# 使用方法
-
-在release中下载最新的安装包，双击安装到Alfred中
+Download the latest package from the releases, and double-click to install it into Alfred.
 
 ```
 pwd 16
